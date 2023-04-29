@@ -18,6 +18,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public Payment pay(Integer reservationId, int amountSent, String mode) throws Exception {
+        mode = mode.toUpperCase();
         Reservation reservation = reservationRepository2.findById(reservationId).get();
         Payment payment = new Payment();
         int price = reservation.getNumberOfHours()*reservation.getSpot().getPricePerHour();
