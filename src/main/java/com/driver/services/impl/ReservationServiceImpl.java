@@ -23,6 +23,37 @@ public class ReservationServiceImpl implements ReservationService {
     ParkingLotRepository parkingLotRepository3;
     @Override
     public Reservation reserveSpot(Integer userId, Integer parkingLotId, Integer timeInHours, Integer numberOfWheels) throws Exception {
+        User user;
+        ParkingLot parkingLot;
+        try {
+            user = userRepository3.findById(userId).get();
+            parkingLot = parkingLotRepository3.findById(parkingLotId).get();
+        }
+        catch (Exception e){
+            throw new Exception("Cannot make reservation");
+        }
+
+        List<Spot> spotList = parkingLot.getSpotList();
+        int minPrice = Integer.MAX_VALUE;
+        Spot minPricedSpot = null;
+        for(Spot spot: spotList){
+            if((numberOfWheels>4 && spot.getSpotType()==SpotType.OTHERS) || (numberOfWheels>2 && spot.getSpotType()==SpotType.FOUR_WHEELER)
+            || (numberOfWheels<=2 && spot.getSpotType()==SpotType.TWO_WHEELER)){
+                int price = spot.getPricePerHour()*timeInHours;
+                if(price<minPrice){
+                    minPrice = price;
+                    minPricedSpot = spot;
+                }
+            }
+        }
+        if(minPricedSpot==null){
+            throw new Exception("Cannot make reservation");
+        }
+        Reservation reservation = new Reservation();
+        reservation.setNumberOfHours(timeInHours);
+        reservation.setSpot(minPricedSpot);
+        reservation.setUser(user);
+        return reservationRepository3.save(reservation);
 
     }
 }
