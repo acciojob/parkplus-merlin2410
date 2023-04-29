@@ -33,6 +33,7 @@ public class ReservationServiceImpl implements ReservationService {
             throw new Exception("Cannot make reservation");
         }
 
+
         List<Spot> spotList = parkingLot.getSpotList();
         int minPrice = Integer.MAX_VALUE;
         Spot minPricedSpot = null;
@@ -49,6 +50,10 @@ public class ReservationServiceImpl implements ReservationService {
         if(minPricedSpot==null){
             throw new Exception("Cannot make reservation");
         }
+        if(minPricedSpot.getOccupied()==true){
+            throw new Exception("Cannot make reservation");
+        }
+        minPricedSpot.setOccupied(true);
         Reservation reservation = new Reservation();
         reservation.setNumberOfHours(timeInHours);
         reservation.setSpot(minPricedSpot);
