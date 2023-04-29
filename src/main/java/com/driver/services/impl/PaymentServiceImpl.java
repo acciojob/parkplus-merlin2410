@@ -29,11 +29,11 @@ public class PaymentServiceImpl implements PaymentService {
             payment.setPaymentMode(PaymentMode.valueOf(mode));
             payment.setPaymentCompleted(true);
             payment.setReservation(reservation);
-
+            return paymentRepository2.save(payment);
         }
         else{
             throw new Exception("Payment mode not detected");
         }
-        return paymentRepository2.save(payment);
+
     }
 }
