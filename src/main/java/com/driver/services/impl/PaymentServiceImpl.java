@@ -5,6 +5,7 @@ import com.driver.model.PaymentMode;
 import com.driver.model.Reservation;
 import com.driver.repository.PaymentRepository;
 import com.driver.repository.ReservationRepository;
+import com.driver.repository.SpotRepository;
 import com.driver.services.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,9 @@ public class PaymentServiceImpl implements PaymentService {
     ReservationRepository reservationRepository2;
     @Autowired
     PaymentRepository paymentRepository2;
+
+    @Autowired
+    SpotRepository spotRepository2;
 
     @Override
     public Payment pay(Integer reservationId, int amountSent, String mode) throws Exception {
@@ -31,6 +35,7 @@ public class PaymentServiceImpl implements PaymentService {
             payment.setReservation(reservation);
             reservation.setPayment(payment);
             reservation.getSpot().setOccupied(false);
+            spotRepository2.save(reservation.getSpot());
             reservationRepository2.save(reservation);
             return payment;
         }
